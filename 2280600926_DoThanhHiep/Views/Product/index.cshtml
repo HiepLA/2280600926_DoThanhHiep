@@ -1,0 +1,47 @@
+﻿@model IEnumerable<_2280600926_DoThanhHiep.Models.Product>
+@{
+    ViewData["Title"] = "Danh sách sản phẩm";
+}
+
+<h2>Danh sách sản phẩm</h2>
+
+<a asp-action="Add" style="display: block; margin-bottom: 10px; padding: 5px; background: gray; color: white; text-decoration: none; width: 150px; text-align: center;">Thêm sản phẩm</a>
+
+<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+    <thead style="background: #ddd;">
+        <tr>
+            <th>ID</th>
+            <th>Tên</th>
+            <th>Giá</th>
+            <th>Mô Tả</th>
+            <th>Ảnh</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.Price VNĐ</td>
+                    <td>@item.Description</td>
+                    <td>
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                                <img src="@item.ImageUrl" alt="Ảnh" width="50" height="50" />
+                    }
+                    else
+                    {
+                                <span>Không có ảnh</span>
+                    }
+                    </td>
+                    <td>
+                        <a asp-action="Update" asp-route-id="@item.Id" style="color: blue; text-decoration: none;">Sửa</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id" style="color: red; text-decoration: none;"
+                           onclick="return confirm('Bạn chắc chưa?');">Xóa</a>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>
