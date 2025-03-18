@@ -1,0 +1,26 @@
+﻿@model _2280600926_DoThanhHiep.Models.Product
+@{
+    ViewData["Title"] = "Xóa Sản Phẩm";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center text-danger">Xóa Sản Phẩm</h2>
+    <div class="shadow p-4 bg-light rounded">
+        <h4>Bạn có chắc chắn muốn xóa sản phẩm này không?</h4>
+        <dl class="row">
+            <dt class="col-sm-3">Tên Sản Phẩm:</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+
+            <dt class="col-sm-3">Loại:</dt>
+            <dd class="col-sm-9">@Model.Category?.Name</dd>
+
+            <dt class="col-sm-3">Giá:</dt>
+            <dd class="col-sm-9">@Model.Price.ToString("N0") VNĐ</dd>
+        </dl>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">🗑️ Xóa</button>
+            <a asp-action="Index" class="btn btn-secondary">🔙 Quay Lại</a>
+        </form>
+    </div>
+</div>
