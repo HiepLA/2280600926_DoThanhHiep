@@ -1,21 +1,30 @@
 ﻿@page
-@model LogoutModel
+@model _2280600926_DoThanhHiep.Areas.Identity.Pages.Account.LogoutModel
 @{
-    ViewData["Title"] = "Log out";
+    ViewData["Title"] = "Đăng xuất";
 }
 
-<header>
-    <h1>@ViewData["Title"]</h1>
-    @{
-        if (User.Identity?.IsAuthenticated ?? false)
-        {
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
-            </form>
-        }
-        else
-        {
-            <p>You have successfully logged out of the application.</p>
-        }
-    }
-</header>
+<div class="container">
+    <header>
+        <h1>@ViewData["Title"]</h1>
+    </header>
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Xác nhận đăng xuất</h5>
+                    <p class="card-text">Bạn có chắc chắn muốn đăng xuất?</p>
+                    <form method="post">
+                        <button type="submit" class="btn btn-primary">Đăng xuất</button>
+                        <a asp-area="" asp-page="/Index" class="btn btn-secondary">Hủy</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+}
