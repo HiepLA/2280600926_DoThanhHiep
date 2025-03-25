@@ -1,0 +1,48 @@
+﻿@model ShoppingCart
+
+<h1>Giỏ hàng của bạn</h1>
+
+@if (Model.Items.Any())
+{
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Tổng</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Items)
+            {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Price $</td> <!-- Bỏ .ToString("N0") -->
+                            <td>@item.Quantity</td>
+                            <td>@(item.Price * item.Quantity) $</td> <!-- Bỏ .ToString("N0") -->
+                            <td>
+                                <a asp-action="RemoveFromCart" asp-route-productId="@item.ProductId" class="btn btn-danger">Xóa</a>
+                            </td>
+                        </tr>
+            }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">Tổng cộng:</td>
+                    <td>@Model.Items.Sum(i => i.Price * i.Quantity) $</td> <!-- Bỏ .ToString("N0") -->
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        <div>
+            <a asp-action="Checkout" class="btn btn-primary">Thanh toán</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Tiếp tục mua sắm</a>
+        </div>
+}
+else
+{
+        <p>Giỏ hàng của bạn hiện đang trống.</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Tiếp tục mua sắm</a>
+}

@@ -1,0 +1,34 @@
+﻿@model _2280600926_DoThanhHiep.Models.ShoppingCart
+
+<h2>Giỏ hàng của bạn</h2>
+
+@if (Model.Items.Count == 0)
+{
+        <p>Giỏ hàng trống. <a asp-controller="Product" asp-action="Index">Tiếp tục mua sắm</a></p>
+}
+else
+{
+        <table border="1" cellpadding="5" cellspacing="0" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Items)
+            {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Price $</td>
+                            <td>@(item.Price * item.Quantity) $</td>
+                        </tr>
+            }
+            </tbody>
+        </table>
+        <p><strong>Tổng tiền:</strong> @Model.Items.Sum(i => i.Price * i.Quantity) $</p>
+        <a asp-action="Checkout" class="btn btn-primary">Thanh toán</a>
+}
