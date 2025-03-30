@@ -8,12 +8,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 
+[Authorize] // Yêu cầu người dùng phải đăng nhập mới có thể truy cập
 public class ProductController : Controller
 {
-   
     private readonly IProductRepository _productRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly ApplicationDbContext _context;
@@ -25,22 +24,24 @@ public class ProductController : Controller
         _context = context;
     }
 
-    // ✅ Hiển thị danh sách sản phẩm
+    // ✅ Người dùng có thể xem danh sách sản phẩm
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var products = await _productRepository.GetAllAsync();
         return View(products);
     }
 
-    // ✅ Hiển thị form thêm sản phẩm
+    // ✅ Chỉ Admin mới có thể thêm sản phẩm
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Add()
     {
         ViewBag.Categories = await GetCategorySelectList();
         return View(new Product());
     }
 
-    // ✅ Xử lý thêm sản phẩm
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Add(Product product, List<IFormFile> ImageFiles)
     {
         if (!ModelState.IsValid)
@@ -52,7 +53,6 @@ public class ProductController : Controller
         string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
         Directory.CreateDirectory(uploadsFolder);
 
-        // ✅ Lưu ảnh chính vào `ImageUrl`
         if (ImageFiles != null && ImageFiles.Count > 0)
         {
             var firstImage = ImageFiles[0];
@@ -67,11 +67,9 @@ public class ProductController : Controller
             product.ImageUrl = "/images/" + uniqueFileName;
         }
 
-        // ✅ Lưu sản phẩm vào database trước (để có `ProductId`)
         await _productRepository.AddAsync(product);
         await _context.SaveChangesAsync();
 
-        // ✅ Nếu có ảnh phụ, lưu vào `ProductImage`
         if (ImageFiles != null && ImageFiles.Count > 1)
         {
             foreach (var file in ImageFiles.Skip(1))
@@ -99,7 +97,8 @@ public class ProductController : Controller
         return RedirectToAction("Index");
     }
 
-    // ✅ Hiển thị form chỉnh sửa sản phẩm
+    // ✅ Chỉ Admin mới có thể chỉnh sửa sản phẩm
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(int id)
     {
         var product = await _productRepository.GetByIdAsync(id);
@@ -109,8 +108,8 @@ public class ProductController : Controller
         return View(product);
     }
 
-    // ✅ Xử lý chỉnh sửa sản phẩm
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(Product product, List<IFormFile> ImageFiles)
     {
         if (!ModelState.IsValid)
@@ -150,7 +149,8 @@ public class ProductController : Controller
         return RedirectToAction("Index");
     }
 
-    // ✅ Xóa sản phẩm
+    // ✅ Chỉ Admin mới có thể xóa sản phẩm
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var product = await _productRepository.GetByIdAsync(id);
@@ -163,7 +163,6 @@ public class ProductController : Controller
         }
         catch (Exception ex)
         {
-            // Log lỗi nếu cần
             return BadRequest("Có lỗi khi xóa sản phẩm: " + ex.Message);
         }
     }

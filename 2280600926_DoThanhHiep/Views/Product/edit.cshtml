@@ -1,0 +1,82 @@
+﻿@model _2280600926_DoThanhHiep.Models.Product
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    ViewData["Title"] = "Cập Nhật Sản Phẩm";
+}
+
+<h2 class="mb-4">Cập Nhật Sản Phẩm</h2>
+
+<form asp-area="Admin" asp-controller="Product" asp-action="Edit" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Name" class="form-label">Tên Sản Phẩm</label>
+        <input asp-for="Name" class="form-control" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CategoryId" class="form-label">Loại Sản Phẩm</label>
+        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control" required>
+            <option value="">-- Chọn loại --</option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price" class="form-label">Giá</label>
+        <input asp-for="Price" type="number" step="0.01" min="0.01" class="form-control" required />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description" class="form-label">Mô Tả</label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <!-- Hiển thị ảnh chính hiện tại -->
+    <div class="form-group">
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+                    <label class="form-label">Ảnh Hiện Tại</label>
+                    <div>
+                        <img src="@Model.ImageUrl" alt="@Model.Name" width="100" height="100" class="img-thumbnail" />
+                    </div>
+        }
+    </div>
+
+    <!-- Chọn ảnh chính mới -->
+    <div class="form-group">
+        <label class="form-label">Chọn Ảnh Mới (nếu muốn thay đổi)</label>
+        <input type="file" name="imageUrl" class="form-control" accept="image/*" />
+    </div>
+
+    <!-- Danh sách ảnh phụ (nếu có) -->
+    @if (Model.Images != null && Model.Images.Any())
+    {
+                <div class="form-group">
+                    <label class="form-label">Ảnh Phụ Hiện Tại</label>
+                    <div class="row">
+                @foreach (var img in Model.Images)
+                {
+                                    <div class="col-md-3">
+                                        <img src="@img.Url" alt="Ảnh phụ" width="100" height="100" class="img-thumbnail" />
+                                    </div>
+                }
+                    </div>
+                </div>
+    }
+
+    <!-- Chọn ảnh phụ mới -->
+    <div class="form-group">
+        <label class="form-label">Thêm Ảnh Phụ Mới</label>
+        <input type="file" name="imageUrls" multiple class="form-control" accept="image/*" />
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-success">Cập Nhật</button>
+        <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+    </div>
+</form>
+
